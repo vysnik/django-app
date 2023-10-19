@@ -21,15 +21,15 @@ class ThrottlingMiddleware:
 
     def __call__(self, request: HttpRequest):
         time_delay = 5
-        if not self.requests_time:
+
+        if request.META.get("REMOTE_ADDR") not in self.requests_time:
             print("This is the first request after starting the server")
         else:
-            if round(time.time()) - self.requests_time["time"] < time_delay \
-                    and self.requests_time["ip_address"] == request.META.get("REMOTE_ADDR"):
-                print("It took less than 10 seconds to re-request the IP address:", request.META.get("REMOTE_ADDR"))
+            if round(time.time()) - self.requests_time[request.META.get("REMOTE_ADDR")] < time_delay:
+                print("It took less than 5 seconds to re-request the IP address:", request.META.get("REMOTE_ADDR"))
                 return render(request, "requestdataapp/error-request.html")
 
-        self.requests_time = {"time": round(time.time()), "ip_address": request.META.get("REMOTE_ADDR")}
+        self.requests_time[request.META.get("REMOTE_ADDR")] = round(time.time())
 
         response = self.get_response(request)
         return response
