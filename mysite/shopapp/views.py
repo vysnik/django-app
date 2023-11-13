@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect, reverse, get_list_or_404, get_obj
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 
 from .models import Product, Order
 from .forms import ProductForm, OrderForm, GroupForm
@@ -48,15 +49,24 @@ class ProductsListView(ListView):
     context_object_name = "products"
     queryset = Product.objects.filter(archived=False)
 
-class ProductCreateView(CreateView):
+class ProductCreateView(UserPassesTestMixin, CreateView):
+    def test_func(self):
+        # return self.request.user.groups.filter(name="secret-group").exists()
+        return self.request.user.is_superuser
+
+    queryset = (
+        Product.objects
+        .select_related('created_by_id')
+    )
     model = Product
     # form_class = ProductForm
-    fields = "name", "price", "description", "discount"
+    fields = "created_by_id", "name", "price", "description", "discount"
+
     success_url = reverse_lazy("shopapp:products_list")
 
 class ProductUpdateView(UpdateView):
     model = Product 
-    fields = "name", "price", "description", "discount"
+    fields = "name", "price", "description", "discount",
     template_name_suffix = "_update_form"
     def get_success_url(self):
         return reverse(
@@ -74,31 +84,16 @@ class ProductDeleteView(DeleteView):
         self.object.save()
         return HttpResponseRedirect(success_url)
 
-def create_product(request: HttpRequest):
-    if request.method == "POST":
-        form = ProductForm(request.POST)
-        if form.is_valid():
-            # name = form.changed_data["name"]
-            # price = form.changed_data["price"]
-            # Product.objects.create(**form.cleaned_data)
-            form.save()
-            url = reverse("shopapp:products_list")
-            return redirect(url)
-    else:
-        form = ProductForm()
-    context = {
-        'form': form,
-    }
-    return render(request, 'shopapp/create-product.html', context=context)
 
-class OrderListView(ListView):
+class OrderListView(LoginRequiredMixin, ListView):
     queryset = (
         Order.objects
         .select_related('user')
         .prefetch_related('products')
     )
 
-class OrderDetailView(DetailView):
+class OrderDetailView(PermissionRequiredMixin, DetailView):
+    permission_required = "shopapp.view_order"
     queryset = (
         Order.objects
         .select_related('user')
