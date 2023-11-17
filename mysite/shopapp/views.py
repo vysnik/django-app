@@ -67,15 +67,16 @@ class ProductCreateView(PermissionRequiredMixin, CreateView):
 
 class ProductUpdateView(UserPassesTestMixin, PermissionRequiredMixin, UpdateView):
     permission_required = "shopapp.change_product"
-    def test_func(self):
-        # return self.request.user.groups.filter(name="secret-group").exists()
-        if self.request.user.is_superuser:
-            return
-        return self.get_object(Product.created_by) == self.request.user.pk
 
     model = Product 
     fields = "name", "price", "description", "discount",
     template_name_suffix = "_update_form"
+
+    def test_func(self):
+        # return self.request.user.groups.filter(name="secret-group").exists()
+        if self.request.user.is_superuser or self.get_object().created_by == self.request.user:
+            return True
+
     def get_success_url(self):
         return reverse(
             "shopapp:products_details",
