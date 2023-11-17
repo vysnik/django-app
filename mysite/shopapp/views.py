@@ -51,7 +51,6 @@ class ProductsListView(ListView):
 
 class ProductCreateView(PermissionRequiredMixin, CreateView):
     permission_required = "shopapp.add_product"
-
     def form_valid(self, form):
        form.instance.created_by = self.request.user
        return super().form_valid(form)
@@ -66,11 +65,13 @@ class ProductCreateView(PermissionRequiredMixin, CreateView):
 
     success_url = reverse_lazy("shopapp:products_list")
 
-class ProductUpdateView(PermissionRequiredMixin, UpdateView):
+class ProductUpdateView(UserPassesTestMixin, PermissionRequiredMixin, UpdateView):
     permission_required = "shopapp.change_product"
     def test_func(self):
         # return self.request.user.groups.filter(name="secret-group").exists()
-        return self.request.user.is_superuser
+        if self.request.user.is_superuser:
+            return
+        return self.get_object(Product.created_by) == self.request.user.pk
 
     model = Product 
     fields = "name", "price", "description", "discount",
