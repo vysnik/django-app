@@ -136,7 +136,7 @@ class OrdersExportTestCase(TestCase):
         ]
         orders_data = response.json()
         self.assertEqual(
-            orders_data["object_list"],
+            orders_data["orders"],
             expected_data,
         )
         self.assertEqual(response.status_code, 200)
