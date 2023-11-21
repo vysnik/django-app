@@ -1,11 +1,11 @@
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LogoutView
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse, reverse_lazy
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, View
 
 from .models import Profile
 
@@ -40,7 +40,6 @@ def set_cookie_view(request: HttpRequest) -> HttpResponse:
     response.set_cookie("fizz", "buzz", max_age=3600)
     return response
 
-@user_passes_test(lambda u: u.is_superuser)
 def get_cookie_view(request: HttpRequest) -> HttpResponse:
     value = request.COOKIES.get("fizz", "default_value")
     return HttpResponse(f"Cookie value: {value!r}")
@@ -55,3 +54,6 @@ def get_session_view(request: HttpRequest) -> HttpResponse:
     value = request.session.get("foobar", "default_value")
     return HttpResponse(f"Session value: {value!r}")
 
+class FooBarView(View):
+    def get(self, reuest: HttpRequest) -> JsonResponse:
+        return JsonResponse({"foo": "bar", "spam": "eggs"})

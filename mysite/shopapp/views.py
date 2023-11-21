@@ -1,7 +1,7 @@
 from timeit import default_timer
 
 from django.contrib.auth.models import Group
-from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
+from django.http import HttpResponse, HttpRequest, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, reverse, get_list_or_404, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
@@ -37,7 +37,7 @@ class GroupListView(View):
             form.save()
         return redirect(request.path)
 
-class ProductDetails(DetailView):
+class ProductDetailsView(DetailView):
     template_name = 'shopapp/product-details.html'
     model = Product
     context_object_name = "product"
@@ -60,7 +60,6 @@ class ProductCreateView(PermissionRequiredMixin, CreateView):
         .select_related('created_by_id')
     )
     model = Product
-    # form_class = ProductForm
     fields = "created_by", "name", "price", "description", "discount"
 
     success_url = reverse_lazy("shopapp:products_list")
@@ -143,3 +142,31 @@ class OrderDeleteView(DeleteView):
     template_name = 'shopapp/order_confirm_delete.html'
     success_url = reverse_lazy("shopapp:orders_list")
 
+class ProductsDataExportView(View):
+    def get(self, request: HttpRequest) -> JsonResponse:
+        products = Product.objects.order_by("pk").all()
+        prdoucts_data = [
+            {
+                "pk": product.pk,
+                "name": product.name,
+                "price": product.price,
+                "archived": product.archived,
+            }
+            for product in products
+        ]
+        return JsonResponse({"products": prdoucts_data})
+
+class OrdersExportView(View):
+    def get(self, request: HttpRequest) -> JsonResponse:
+        orders = Order.objects.order_by("pk").all()
+        orders_data = [
+            {
+                "pk": order.pk,
+                "delivery_address": order.delivery_address,
+                "promocode": order.promocode,
+                "user_id": order.user.pk,
+                "products": [product.pk for product in order.products.all()],
+            }
+            for order in orders
+        ]
+        return JsonResponse({"orders": orders_data})
