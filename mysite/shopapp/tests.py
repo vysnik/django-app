@@ -112,9 +112,11 @@ class OrdersExportTestCase(TestCase):
     ]
     @classmethod
     def setUpClass(cls):
+        super().setUpClass()
         cls.user = User.objects.create_user(username="user_test", password="qwerty")
     @classmethod
     def tearDownClass(cls):
+        super().tearDownClass()
         cls.user.delete()
     def setUp(self) -> None:
         self.client.force_login(self.user)
