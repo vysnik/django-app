@@ -108,9 +108,9 @@ class OrderDetailViewTestCase(TestCase):
 
 class OrdersExportTestCase(TestCase):
     fixtures = [
-        'orders-fixture.json',
-        'products-fixture.json',
         'users-fixture.json',
+        'products-fixture.json',
+        'orders-fixture.json',
     ]
     @classmethod
     def setUpClass(cls):
