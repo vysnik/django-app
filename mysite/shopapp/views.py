@@ -53,7 +53,8 @@ class ProductCreateView(PermissionRequiredMixin, CreateView):
     permission_required = "shopapp.add_product"
     def form_valid(self, form):
        form.instance.created_by = self.request.user
-       return super().form_valid(form)
+       response = super().form_valid(form)
+       return response
 
     queryset = (
         Product.objects

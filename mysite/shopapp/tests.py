@@ -110,7 +110,7 @@ class OrdersExportTestCase(TestCase):
     fixtures = [
         'orders-fixture.json',
         'products-fixture.json',
-        'orders-fixture.json',
+        'users-fixture.json',
     ]
     @classmethod
     def setUpClass(cls):
