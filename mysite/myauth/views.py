@@ -1,16 +1,42 @@
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.models import User
 from django.contrib.auth.views import LogoutView
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse, reverse_lazy
-from django.views.generic import TemplateView, CreateView, View
+from django.views.generic import TemplateView, CreateView, View, UpdateView, ListView, DetailView
 
 from .models import Profile
+from .forms import ProfileForm
+
+class UserListView(ListView):
+    template_name = 'myauth/user-list.html'
+    context_object_name = "users"
+    queryset = User.objects.all()
+
+class UserDetailsView(DetailView):
+    template_name = 'myauth/user-details.html'
+    model = User
+    context_object_name = "user"
 
 class AboutMeView(TemplateView):
     template_name = "myauth/about-me.html"
+
+class ProfileUpdateView(UserPassesTestMixin, UpdateView):
+    model = Profile
+    fields = ["avatar"]
+    template_name = "myauth/profile_update_form.html"
+
+    def test_func(self):
+        if self.request.user.is_superuser or self.get_object().user == self.request.user:
+            return True
+    def get_success_url(self):
+        return reverse("myauth:about-me")
+
+
 
 class RegisterView(CreateView):
     form_class = UserCreationForm

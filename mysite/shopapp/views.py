@@ -8,7 +8,7 @@ from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 
-from .models import Product, Order
+from .models import Product, Order, ProductImage
 from .forms import ProductForm, OrderForm, GroupForm
 
 class ShopIndexView(View):
@@ -39,9 +39,9 @@ class GroupListView(View):
 
 class ProductDetailsView(DetailView):
     template_name = 'shopapp/product-details.html'
-    model = Product
+    # model = Product
+    queryset = Product.objects.prefetch_related("images")
     context_object_name = "product"
-
 
 class ProductsListView(ListView):
     template_name = 'shopapp/products-list.html'
@@ -61,7 +61,7 @@ class ProductCreateView(PermissionRequiredMixin, CreateView):
         .select_related('created_by_id')
     )
     model = Product
-    fields = "created_by", "name", "price", "description", "discount"
+    fields = "created_by", "name", "price", "description", "discount", "preview"
 
     success_url = reverse_lazy("shopapp:products_list")
 
@@ -69,7 +69,8 @@ class ProductUpdateView(UserPassesTestMixin, PermissionRequiredMixin, UpdateView
     permission_required = "shopapp.change_product"
 
     model = Product 
-    fields = "name", "price", "description", "discount",
+    # fields = "name", "price", "description", "discount", "preview"
+    form_class = ProductForm
     template_name_suffix = "_update_form"
 
     def test_func(self):
@@ -82,6 +83,14 @@ class ProductUpdateView(UserPassesTestMixin, PermissionRequiredMixin, UpdateView
             "shopapp:products_details",
             kwargs={"pk": self.object.pk},
         )
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        for image in form.files.getlist("images"):
+            ProductImage.objects.create(
+                product=self.object,
+                image=image,
+            )
+        return response
 
 class ProductDeleteView(DeleteView):
     model = Product
