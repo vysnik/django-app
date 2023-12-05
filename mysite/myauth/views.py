@@ -8,9 +8,26 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView, CreateView, View, UpdateView, ListView, DetailView
+from django.utils.translation import gettext_lazy as _, ngettext_lazy
 
 from .models import Profile
 from .forms import ProfileForm
+
+class HelloView(View):
+    welcome_message = _("welcome hello world!")
+    def get(self, request: HttpRequest) -> HttpResponse:
+        items_str = request.GET.get("items") or 0
+        items = int(items_str)
+        prosucts_line =ngettext_lazy(
+            "one product",
+            "{count} products",
+            items
+        )
+        prosucts_line = prosucts_line.format(count=items)
+        return HttpResponse(
+            f"<h1>{self.welcome_message}</h1>"
+            f"<h2>\n{prosucts_line}</h2>"
+        )
 
 class UserListView(ListView):
     template_name = 'myauth/user-list.html'
