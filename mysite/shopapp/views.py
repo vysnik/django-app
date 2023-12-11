@@ -8,8 +8,54 @@ from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 
+from django_filters.rest_framework import DjangoFilterBackend
+
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.filters import SearchFilter, OrderingFilter
+
 from .models import Product, Order, ProductImage
 from .forms import ProductForm, OrderForm, GroupForm
+from .serializers import ProductSerializer, OrderSerializer
+
+class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [
+        SearchFilter,
+        DjangoFilterBackend,
+        OrderingFilter,
+    ]
+    search_fields = ["name", "description"]
+    filterset_fields = [
+        "name",
+        "description",
+        "price",
+        "discount",
+        "archived",
+    ]
+    ordering_fields = [
+        "name",
+        "price",
+        "discount",
+    ]
+
+class OrderViewSet(ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    filter_backends = [
+        SearchFilter,
+        DjangoFilterBackend,
+        OrderingFilter,
+    ]
+    search_fields = ["delivery_address", "promocode"]
+    filterset_fields = [
+        "delivery_address",
+        "promocode",
+    ]
+    ordering_fields = [
+        "delivery_address",
+        "promocode",
+    ]
 
 class ShopIndexView(View):
     def get(self, request: HttpRequest) -> HttpResponse:
