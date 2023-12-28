@@ -29,7 +29,9 @@ SECRET_KEY = 'django-insecure-ze)9iw^lmd(gmtsg1-zac@4p)d(+kuhk&zbqmlk&9yp%0&njwo
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 # Application definition
 
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'drf_spectacular',
+    'debug_toolbar',
 
     'shopapp.apps.ShopappConfig',
     'requestdataapp.apps.RequestdataappConfig',
@@ -65,7 +68,7 @@ MIDDLEWARE = [
 
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.admindocs.middleware.XViewMiddleware',
-
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 
     # 'requestdataapp.middlewares.set_useragent_middleware',
     # 'requestdataapp.middlewares.ThrottlingMiddleware',
@@ -177,24 +180,33 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
 }
 
+LOGFILE_NAME = BASE_DIR / "log.txt"
+LOGFILE_SIZE = 1 * 1024 * 1024
+LOGFILE_COUNT = 3
+
 LOGGING = {
-    'version': 1,
-    'filters': {
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        }
-    },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'filters': ['require_debug_true'],
-            'class': 'logging.StreamHandler',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "%(asctime)s %(levelname)s %(name)s: %(message)s",
         },
     },
-    'loggers': {
-        'django.db.backends': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
         },
+        "logfile": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": LOGFILE_NAME,
+            "maxBytes": LOGFILE_SIZE,
+            "backupCount": LOGFILE_COUNT,
+            "formatter": "verbose",
+        },
+    },
+    "root": {
+        "handlers": ["console", "logfile"],
+        "level": "INFO",
     },
 }

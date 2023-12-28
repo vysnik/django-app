@@ -1,0 +1,10 @@
+2023-12-25 16:59:15,728 INFO shopapp.views: Rendering shop index
+2023-12-25 16:59:16,090 INFO shopapp.views: Rendering shop index
+2023-12-25 16:59:16,522 INFO shopapp.views: Rendering shop index
+2023-12-25 17:02:16,225 INFO django.utils.autoreload: /home/vysnik/PycharmProjects/python_django/mysite/mysite/settings.py changed, reloading.
+2023-12-25 17:02:16,652 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2023-12-27 16:39:18,688 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2023-12-27 16:39:30,204 WARNING django.request: Not Found: /
+2023-12-27 16:39:40,342 WARNING django.request: Not Found: /__debug__/
+2023-12-27 16:39:42,594 WARNING django.request: Not Found: /__debug__/
+2023-12-27 16:39:45,414 WARNING django.request: Not Found: /__debug__
