@@ -8,3 +8,51 @@
 2023-12-27 16:39:40,342 WARNING django.request: Not Found: /__debug__/
 2023-12-27 16:39:42,594 WARNING django.request: Not Found: /__debug__/
 2023-12-27 16:39:45,414 WARNING django.request: Not Found: /__debug__
+2023-12-30 17:39:16,154 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2023-12-30 17:39:35,987 WARNING django.request: Not Found: /
+2023-12-30 17:39:35,992 WARNING django.request: Not Found: /
+2023-12-30 17:39:37,684 WARNING django.request: Not Found: /favicon.ico
+2023-12-30 17:39:38,397 WARNING django.request: Not Found: /
+2023-12-30 17:39:49,237 INFO shopapp.views: Rendering shop index
+2023-12-30 17:39:49,484 WARNING django.request: Not Found: /favicon.ico
+2023-12-31 09:24:13,822 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2023-12-31 09:24:27,792 WARNING django.request: Not Found: /
+2023-12-31 09:24:34,579 INFO shopapp.views: Rendering shop index
+2024-01-01 12:12:44,947 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2024-01-01 12:12:59,797 WARNING django.request: Not Found: /
+2024-01-01 12:16:31,627 INFO django.utils.autoreload: /home/user/PycharmProjects/python_django/mysite/shopapp/views.py changed, reloading.
+2024-01-01 12:16:34,893 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2024-01-01 12:17:18,127 INFO django.utils.autoreload: /home/user/PycharmProjects/python_django/mysite/shopapp/views.py changed, reloading.
+2024-01-01 12:17:18,924 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2024-01-01 12:17:20,170 ERROR django.request: Internal Server Error: /ru/shop/products/export/
+Traceback (most recent call last):
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/django/views/generic/base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/user/PycharmProjects/python_django/mysite/shopapp/views.py", line 238, in get
+    name = elem["nae"]
+KeyError: 'nae'
+2024-01-01 12:31:58,158 INFO django.utils.autoreload: /home/user/PycharmProjects/python_django/mysite/mysite/settings.py changed, reloading.
+2024-01-01 12:31:59,316 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2024-01-01 12:32:11,273 ERROR django.request: Internal Server Error: /ru/shop/products/export/
+Traceback (most recent call last):
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/sentry_sdk/integrations/django/views.py", line 84, in sentry_wrapped_callback
+    return callback(request, *args, **kwargs)
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/django/views/generic/base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/user/PycharmProjects/python_django/mysite/shopapp/views.py", line 238, in get
+    name = elem["nae"]
+KeyError: 'nae'
+2024-01-01 12:34:13,819 INFO django.utils.autoreload: /home/user/PycharmProjects/python_django/mysite/shopapp/views.py changed, reloading.
+2024-01-01 12:34:14,392 INFO django.utils.autoreload: Watching for file changes with StatReloader

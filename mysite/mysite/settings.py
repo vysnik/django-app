@@ -13,7 +13,20 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 
 from django.urls import reverse_lazy
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy
+
+import sentry_sdk
+
+sentry_sdk.init(
+    dsn="https://23a3f131cb97affcf54f7659b90528d9@o4506495988662272.ingest.sentry.io/4506496003997696",
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    traces_sample_rate=1.0,
+    # Set profiles_sample_rate to 1.0 to profile 100%
+    # of sampled transactions.
+    # We recommend adjusting this value in production.
+    profiles_sample_rate=1.0,
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,10 +41,21 @@ SECRET_KEY = 'django-insecure-ze)9iw^lmd(gmtsg1-zac@4p)d(+kuhk&zbqmlk&9yp%0&njwo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "0.0.0.0",
+    "127.0.0.1"
+]
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+if DEBUG:
+    import socket
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS.append("10.0.02")
+    INTERNAL_IPS.extend(
+        [ip[: ip.rfind(".")] + ".1" for ip in ips]
+    )
 
 # Application definition
 
@@ -143,8 +167,8 @@ LOCALE_PATHS = [
     BASE_DIR / 'locale/'
 ]
 LANGUAGES = [
-    ('en', _('English')),
-    ('ru', _('Russian')),
+    ('en', gettext_lazy('English')),
+    ('ru', gettext_lazy('Russian')),
 ]
 
 # Static files (CSS, JavaScript, Images)

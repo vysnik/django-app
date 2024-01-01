@@ -233,6 +233,11 @@ class ProductsDataExportView(View):
             }
             for product in products
         ]
+
+        elem = prdoucts_data[0]
+        name = elem["name"]
+        print('NAME:', name)
+
         return JsonResponse({"products": prdoucts_data})
 
 class OrdersExportView(View):
