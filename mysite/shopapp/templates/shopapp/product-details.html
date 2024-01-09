@@ -12,7 +12,7 @@
         <div>{% translate 'Price' %}: <em>{{ product.price }}</em></div>
         <div>{% translate 'Discount' %}: <em>{{ product.discount }}</em></div>
         <div>{% translate 'Archived' %}: <em>{{ product.archived }}</em></div>
-        <div>{% translate 'Created by' %}: <em>{{ product.created_by_id }}</em></div>
+        <div>{% translate 'Created by' %}: <em>{{ product.created_by_id}}</em></div>
         {% if product.preview %}
             <img src="{{ product.preview.url }}" alt="{{ product.preview.name }}" height="200px">
         {% endif %}

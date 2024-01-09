@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
 
     'django.contrib.admindocs',
 
@@ -79,6 +80,8 @@ INSTALLED_APPS = [
     'myauth.apps.MyauthConfig',
     'myapiapp.apps.MyapiappConfig',
     'blogapp.apps.BlogappConfig',
+
+
 ]
 
 MIDDLEWARE = [
