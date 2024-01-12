@@ -3,7 +3,7 @@ from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.urls import path
 
-from .common import save_csv_products
+from .common import save_csv_products, save_csv_orders
 from .models import Product, Order, ProductImage
 from .admin_mixins import ExportAsCSVMixin
 
@@ -131,7 +131,7 @@ class OrderAdmin(admin.ModelAdmin):
             }
             return render(request, 'admin/csv_form.html', context=context, status=400)
 
-        csv_file = save_csv_products(
+        csv_file = save_csv_orders(
             file=form.files["csv_file"].file,
             encoding=request.encoding,
         )
