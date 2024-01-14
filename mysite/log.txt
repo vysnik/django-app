@@ -416,3 +416,53 @@ django.template.exceptions.TemplateDoesNotExist: sitemap.xml
 2024-01-14 07:26:42,402 WARNING django.request: Not Found: /
 2024-01-14 07:30:38,007 INFO django.utils.autoreload: /home/user/PycharmProjects/python_django/mysite/shopapp/common.py changed, reloading.
 2024-01-14 07:30:41,238 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2024-01-14 07:54:59,290 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2024-01-14 07:55:19,090 WARNING django.request: Not Found: /
+2024-01-14 07:55:42,903 ERROR django.request: Internal Server Error: /ru/admin/shopapp/order/import_orders_csv/
+Traceback (most recent call last):
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/sentry_sdk/integrations/django/views.py", line 84, in sentry_wrapped_callback
+    return callback(request, *args, **kwargs)
+  File "/home/user/PycharmProjects/python_django/mysite/shopapp/admin.py", line 134, in import_csv
+    csv_file = save_csv_orders(
+  File "/home/user/PycharmProjects/python_django/mysite/shopapp/common.py", line 28, in save_csv_orders
+    delivery_address=row['delivery_address'],
+KeyError: 'delivery_address'
+2024-01-14 07:56:11,765 WARNING django.request: Not Found: /
+2024-01-14 07:57:19,350 INFO django.utils.autoreload: /home/user/PycharmProjects/python_django/mysite/shopapp/common.py changed, reloading.
+2024-01-14 07:57:21,879 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2024-01-14 07:58:00,759 INFO django.utils.autoreload: /home/user/PycharmProjects/python_django/mysite/shopapp/common.py changed, reloading.
+2024-01-14 07:58:01,547 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2024-01-14 07:58:06,616 ERROR django.request: Internal Server Error: /ru/admin/shopapp/order/import_orders_csv/
+Traceback (most recent call last):
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/sentry_sdk/integrations/django/views.py", line 84, in sentry_wrapped_callback
+    return callback(request, *args, **kwargs)
+  File "/home/user/PycharmProjects/python_django/mysite/shopapp/admin.py", line 134, in import_csv
+    csv_file = save_csv_orders(
+  File "/home/user/PycharmProjects/python_django/mysite/shopapp/common.py", line 28, in save_csv_orders
+    delivery_address=row['delivery_address'],
+KeyError: 'delivery_address'
+2024-01-14 07:58:37,838 INFO django.utils.autoreload: /home/user/PycharmProjects/python_django/mysite/shopapp/common.py changed, reloading.
+2024-01-14 07:58:39,208 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2024-01-14 07:58:46,959 ERROR django.request: Internal Server Error: /ru/admin/shopapp/order/import_orders_csv/
+Traceback (most recent call last):
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/user/PycharmProjects/python_django/venv/lib/python3.10/site-packages/sentry_sdk/integrations/django/views.py", line 84, in sentry_wrapped_callback
+    return callback(request, *args, **kwargs)
+  File "/home/user/PycharmProjects/python_django/mysite/shopapp/admin.py", line 134, in import_csv
+    csv_file = save_csv_orders(
+  File "/home/user/PycharmProjects/python_django/mysite/shopapp/common.py", line 28, in save_csv_orders
+    delivery_address=row['delivery_address'],
+KeyError: 'delivery_address'
+2024-01-14 07:59:47,398 INFO django.utils.autoreload: /home/user/PycharmProjects/python_django/mysite/shopapp/common.py changed, reloading.
+2024-01-14 07:59:50,791 INFO django.utils.autoreload: Watching for file changes with StatReloader

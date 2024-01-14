@@ -32,6 +32,6 @@ def save_csv_orders(file, encoding):
         )
         order.save()
 
-    product_ids = [int(id) for id in row['products'].split(',')]
-    products = Product.objects.filter(pk__in=product_ids)
-    order.products.set(products)
+        product_ids = [int(id) for id in row['products'].split(',')]
+        products = Product.objects.filter(pk__in=product_ids)
+        order.products.set(products)
