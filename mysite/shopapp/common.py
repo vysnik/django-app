@@ -23,9 +23,15 @@ def save_csv_orders(file, encoding):
         encoding=encoding,
     )
     reader = DictReader(csv_file)
-    orders = [
-        Order(**row)
-        for row in reader
-    ]
-    Order.objects.bulk_create(orders)
-    return orders
+    for row in reader:
+        order = Order(
+            delivery_address=row['delivery_address'],
+            promocode=row['promocode'],
+            created_at=row['created_at'],
+            user_id=int(row['user_id']),
+        )
+        order.save()
+
+    product_ids = [int(id) for id in row['products'].split(',')]
+    products = Product.objects.filter(pk__in=product_ids)
+    order.products.set(products)

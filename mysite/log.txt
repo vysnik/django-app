@@ -412,3 +412,7 @@ django.template.exceptions.TemplateDoesNotExist: sitemap.xml
 2024-01-12 11:27:37,543 WARNING django.request: Not Found: /favicon.ico
 2024-01-12 11:40:01,582 INFO django.utils.autoreload: C:\Users\USER\PycharmProjects\python_django\mysite\shopapp\common.py changed, reloading.
 2024-01-12 11:40:04,722 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2024-01-14 07:26:25,424 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2024-01-14 07:26:42,402 WARNING django.request: Not Found: /
+2024-01-14 07:30:38,007 INFO django.utils.autoreload: /home/user/PycharmProjects/python_django/mysite/shopapp/common.py changed, reloading.
+2024-01-14 07:30:41,238 INFO django.utils.autoreload: Watching for file changes with StatReloader
