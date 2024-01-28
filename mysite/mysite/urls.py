@@ -43,7 +43,7 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
-    path('accounts/', include('myauth.urls')),
+    path('myauth/', include('myauth.urls')),
     path('shop/', include('shopapp.urls')),
 )
 

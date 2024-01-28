@@ -3,15 +3,18 @@ from timeit import default_timer
 
 from csv import DictWriter
 
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, reverse, get_list_or_404, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
+from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
-
+from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
+from django.core.cache import cache
+from rest_framework import serializers
 
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -65,6 +68,10 @@ class ProductViewSet(ModelViewSet):
     )
     def retrieve(self, *args, **kwargs):
         return super().retrieve(*args, **kwargs)
+    @method_decorator(cache_page(60))
+    def list(self, *args, **kwargs):
+        # print("hello products list")
+        return super().list(*args, **kwargs)
 
     @action(methods=['get'], detail=False)
     def download_csv(self, request: Request):
@@ -118,6 +125,7 @@ class OrderViewSet(ModelViewSet):
     ]
 
 class ShopIndexView(View):
+    # @method_decorator(cache_page(60))
     def get(self, request: HttpRequest) -> HttpResponse:
         products = [
             ('laptop', 1999),
@@ -129,6 +137,7 @@ class ShopIndexView(View):
             'products': products,
             'items': 1,
         }
+        print("Shop index context", context)
         log.debug("Products for shop index: %s", products)
         log.info("Rendering shop index")
         return render(request, 'shopapp/shop-index.html', context=context)
@@ -261,22 +270,24 @@ class OrderDeleteView(DeleteView):
     template_name = 'shopapp/order_confirm_delete.html'
     success_url = reverse_lazy("shopapp:orders_list")
 
+
 class ProductsDataExportView(View):
     def get(self, request: HttpRequest) -> JsonResponse:
-        products = Product.objects.order_by("pk").all()
-        prdoucts_data = [
-            {
-                "pk": product.pk,
-                "name": product.name,
-                "price": product.price,
-                "archived": product.archived,
-            }
-            for product in products
-        ]
+        cache_key = "products_data_export"
+        prdoucts_data = cache.get(cache_key)
+        if prdoucts_data is None:
+            products = Product.objects.order_by("pk").all()
+            prdoucts_data = [
+                {
+                    "pk": product.pk,
+                    "name": product.name,
+                    "price": product.price,
+                    "archived": product.archived,
+                }
+                for product in products
+            ]
 
-        elem = prdoucts_data[0]
-        name = elem["name"]
-        print('NAME:', name)
+            cache.set(cache_key, prdoucts_data, 60)
 
         return JsonResponse({"products": prdoucts_data})
 
@@ -294,3 +305,40 @@ class OrdersExportView(View):
             for order in orders
         ]
         return JsonResponse({"orders": orders_data})
+
+class UserOrdersListView(View):
+    template_name = 'shopapp/user_orders_list.html'
+    def get(self, request, *args, **kwargs):
+        user_id = self.kwargs.get('user_id')
+        user = get_object_or_404(User, id=user_id)
+
+        orders = Order.objects.filter(user=user)
+
+        self.owner = user
+
+        context = self.get_context_data(owner=user, orders=orders)
+        return render(request, self.template_name, context)
+
+    def get_context_data(self, **kwargs):
+        context = {
+            'owner': self.owner,
+            **kwargs,
+        }
+        return context
+
+class UserOrdersExportView(View):
+    def get(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
+        user_id = self.kwargs.get('user_id')
+        user = get_object_or_404(User, id=user_id)
+
+        cache_key = f'user_orders_export_{user_id}'
+        cached_data = cache.get(cache_key)
+        if cached_data:
+            return JsonResponse(cached_data, safe=False)
+        else:
+            orders = Order.objects.filter(user=user).order_by('pk')
+            serializer = OrderSerializer(orders, many=True)
+
+            cache.set(cache_key, serializer.data, 60)
+
+            return JsonResponse(serializer.data, safe=False)
