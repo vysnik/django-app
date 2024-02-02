@@ -1083,3 +1083,7 @@ TypeError: In order to allow non-dict objects to be serialized set the safe para
 2024-01-28 10:08:35,441 INFO django.utils.autoreload: /home/user/PycharmProjects/python_django/mysite/shopapp/views.py changed, reloading.
 2024-01-28 10:08:36,932 INFO django.utils.autoreload: Watching for file changes with StatReloader
 2024-01-28 10:11:27,598 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2024-02-01 18:56:38,375 INFO django.utils.autoreload: Watching for file changes with StatReloader
+2024-02-01 18:56:40,152 WARNING django.request: Not Found: /
+2024-02-01 18:56:40,518 WARNING django.request: Not Found: /favicon.ico
+2024-02-01 18:56:49,048 INFO shopapp.views: Rendering shop index
