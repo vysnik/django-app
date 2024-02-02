@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "python-django"
+name = "python_django"
 version = "0.1.0"
 description = ""
 authors = ["Nikita Vyskubov <vysnik@gmail.com>"]
