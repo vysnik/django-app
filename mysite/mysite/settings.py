@@ -9,7 +9,10 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import os
 
+from os import getenv
+import logging.config
 from pathlib import Path
 
 from django.urls import reverse_lazy
@@ -30,21 +33,28 @@ sentry_sdk.init(
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+DATABASE_DIR = BASE_DIR / "database"
+DATABASE_DIR.mkdir(exist_ok=True)
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ze)9iw^lmd(gmtsg1-zac@4p)d(+kuhk&zbqmlk&9yp%0&njwo'
+SECRET_KEY = getenv(
+    "DJANGO_SECRET_KEY",
+    'django-insecure-ze)9iw^lmd(gmtsg1-zac@4p)d(+kuhk&zbqmlk&9yp%0&njwo',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = getenv("DJANGO_BEBUG", "0") == "1"
+
 
 ALLOWED_HOSTS = [
     "0.0.0.0",
-    "127.0.0.1"
-]
+    "127.0.0.1",
+    "localhost",
+] + getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
@@ -131,7 +141,8 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': DATABASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -218,33 +229,27 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
 }
 
-LOGFILE_NAME = BASE_DIR / "log.txt"
-LOGFILE_SIZE = 1 * 1024 * 1024
-LOGFILE_COUNT = 3
-
-LOGGING = {
+LOGLEVEL = getenv("DJANGO_LOGLEVEL", "info").upper()
+logging.config.dictConfig({
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "verbose": {
-            "format": "%(asctime)s %(levelname)s %(name)s: %(message)s",
+        "console": {
+            "format": "%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(message)s"
         },
     },
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
-            "formatter": "verbose",
-        },
-        "logfile": {
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": LOGFILE_NAME,
-            "maxBytes": LOGFILE_SIZE,
-            "backupCount": LOGFILE_COUNT,
-            "formatter": "verbose",
+            "formatter": "console",
         },
     },
-    "root": {
-        "handlers": ["console", "logfile"],
-        "level": "INFO",
+    "loggers": {
+        "": {
+            "level": LOGLEVEL,
+            "handlers": [
+                "console",
+            ],
+        },
     },
-}
+})
