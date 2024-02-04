@@ -38,9 +38,9 @@ services:
       - gunicorn
       - mysite.wsgi:application
       - --bind
-      - "0.0.0.0:8080"
+      - "0.0.0.0:8000"
     ports:
-      - "8000:8080"
+      - "8000:8000"
     restart: always
     env_file:
       - .env
